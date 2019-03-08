@@ -1,5 +1,5 @@
 <template>
-  <div @click="clickHandle">
+  <div class="pageinfo" @click="clickHandle">
 
     <div class="userinfo" @click="bindViewTap">
       <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
@@ -15,14 +15,31 @@
         <card :text="motto"></card>
       </div>
     </div>
-
+    {{inputvalue}}
+    <van-cell-group>
+      <van-field
+      v-bind:value="inputvalue"
+        placeholder="请输入用户名"
+        :border="false"
+        @change="tchange($event)"
+      />
+    </van-cell-group>
     <form class="form-container">
       <input type="text" class="form-control" :value="motto" placeholder="v-model" />
       <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
       <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
     </form>
 
+
     <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
+
+
+    <van-tabbar v-model="active" :active="active" @change="onChange($event)">
+      <van-tabbar-item icon="home-o">标签</van-tabbar-item>
+      <van-tabbar-item icon="search" dot>标签</van-tabbar-item>
+      <van-tabbar-item icon="friends-o" info="5">标签</van-tabbar-item>
+      <van-tabbar-item icon="setting-o" info="20">标签</van-tabbar-item>
+    </van-tabbar>
 
     <div class="all">
         <div class="left">
@@ -30,6 +47,7 @@
         <div class="right">
         </div>
     </div>
+     
   </div>
 </template>
 
@@ -39,9 +57,11 @@ import card from '@/components/card'
 export default {
   data () {
     return {
+      active:2,
+      inputvalue:'你好啊',
       motto: 'Hello miniprograme',
       userInfo: {
-        nickName: 'mpvue',
+        nickName: 'mpvue132',
         avatarUrl: 'http://mpvue.com/assets/logo.png'
       }
     }
@@ -50,8 +70,16 @@ export default {
   components: {
     card
   },
-
+ 
   methods: {
+    onChange(event) {
+      this.active= event.mp.detail;
+      console.log(333,event.mp,this.active);
+    },
+    tchange(ev){
+      // this.inputvalue=ev.mp.detail;
+      console.log(2,ev.mp,this.active);
+    },
     bindViewTap () {
       const url = '../logs/main'
       if (mpvuePlatform === 'wx') {
@@ -61,7 +89,7 @@ export default {
       }
     },
     clickHandle (ev) {
-      console.log('clickHandle:', ev)
+      console.log('clickHandle:', ev,mpvue)
       // throw {message: 'custom test'}
     }
   },
@@ -91,7 +119,7 @@ export default {
 }
 
 .usermotto {
-  margin-top: 150px;
+  margin-top: 50px;
 }
 
 .form-control {
