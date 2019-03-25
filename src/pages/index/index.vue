@@ -1,9 +1,8 @@
 <template>
-  <div class="pageinfo" @click="clickHandle">
+  <div class="pageinfo" >
 
     <div class="userinfo" @click="bindViewTap">
       <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
 
       <div class="userinfo-nickname">
         <card :text="userInfo.nickName"></card>
@@ -25,20 +24,19 @@
       />
     </van-cell-group>
     <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
       <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
       <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
     </form>
 
+    <input type="file" name="filename" >上传</input>
 
     <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
 
 
     <van-tabbar v-model="active" :active="active" @change="onChange($event)">
-      <van-tabbar-item icon="home-o">标签</van-tabbar-item>
-      <van-tabbar-item icon="search" dot>标签</van-tabbar-item>
-      <van-tabbar-item icon="friends-o" info="5">标签</van-tabbar-item>
-      <van-tabbar-item icon="setting-o" info="20">标签</van-tabbar-item>
+      <van-tabbar-item icon="home-o">主页</van-tabbar-item>
+      <van-tabbar-item icon="photo-o"  >相册</van-tabbar-item>
+      <van-tabbar-item icon="friends-o"  >我的</van-tabbar-item>
     </van-tabbar>
 
     <div class="all">
@@ -57,7 +55,7 @@ import card from '@/components/card'
 export default {
   data () {
     return {
-      active:2,
+      active:0,
       inputvalue:'你好啊',
       motto: 'Hello miniprograme',
       userInfo: {
@@ -73,7 +71,25 @@ export default {
  
   methods: {
     onChange(event) {
+      console.log(event.mp.detail)
       this.active= event.mp.detail;
+      wx.chooseImage({
+      success(res) {
+        const tempFilePaths = res.tempFilePaths
+        wx.uploadFile({
+          url: 'https://example.weixin.qq.com/upload', // 仅为示例，非真实的接口地址
+          filePath: tempFilePaths[0],
+          name: 'file',
+          formData: {
+            user: 'test'
+          },
+          success(res) {
+            const data = res.data
+            // do something
+          }
+        })
+      }
+    })
       console.log(333,event.mp,this.active);
     },
     tchange(ev){
@@ -93,7 +109,18 @@ export default {
       // throw {message: 'custom test'}
     }
   },
-
+  mounted(){
+    console.log(this.$fly)
+    this.$fly.request({
+        method:"post", //post/get 请求方式
+        url:"http://localhost:8099/user/test",
+        body:{
+          wxname:'发盛世嫡妃'
+        }
+      }).then(res =>{
+        console.log(res)
+    })
+  },
   created () {
     // let app = getApp()
   }
@@ -140,14 +167,13 @@ export default {
 }
 .left{
   float:left;
-  width:3rem;
   height:1rem;
+  width:2rem;
   background-color:red;
 }
 
 .right{
   float:left;
-  width:4.5rem;
   height:1rem;
   background-color:green;
 }

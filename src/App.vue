@@ -1,4 +1,6 @@
 <script>
+
+import {URL} from './config/service'
 export default {
   created () {
     // 调用API从本地缓存中获取数据
@@ -9,7 +11,9 @@ export default {
      * 百度：mpvue === swan, mpvuePlatform === 'swan'
      * 支付宝(蚂蚁)：mpvue === my, mpvuePlatform === 'my'
      */
-
+    // if(mpvuePlatform === 'wx'){
+    //   mpvue.getData =new wxFly();
+    // }
     let logs
     if (mpvuePlatform === 'my') {
       logs = mpvue.getStorageSync({key: 'logs'}).data || []
@@ -20,7 +24,7 @@ export default {
       })
     } else {
       logs = mpvue.getStorageSync('logs') || []
-      logs.unshift(Date.now())
+      logs.unshift(Date.now());
       mpvue.setStorageSync('logs', logs)
     }
   },
