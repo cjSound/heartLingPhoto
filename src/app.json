@@ -1,13 +1,14 @@
 {
   "pages": [
+    "pages/photo/main",
     "pages/index/main",
-    "pages/logs/main",
+    
     "pages/counter/main"
   ],
   "requiredBackgroundModes": ["audio"],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#fafafa",
     "navigationBarTitleText": "心玲相册",
     "navigationBarTextStyle": "black"
   }

@@ -1,11 +1,11 @@
 const system = {
     // 初始化 vuex
     state: {
-      tabIndex:'',
+      tabIndex:'1',
     },
     mutations: {
         setTabIndex(state, info){
-            state.fullState =info;
+            state.tabIndex =info;
         },
     },
     actions: {

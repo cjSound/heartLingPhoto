@@ -17,8 +17,39 @@ export function formatTime (date) {
 
   return `${t1} ${t2}`
 }
+/**
+ * 按照list，顺序执行promise，每个func 传入list 的item和调用下个promise的resolve
+ * @param {*} list 
+ * @param {*} func 
+ * 全部执行完 之后最后执行的函数
+ * @param {*} end 
+ */
+export function orderListPromise(list,func,end){
+  var funList =[],next ;
+  
+  for(var i =0;i<list.length;i++){
+    (date=>{
+      funList.push(function() {
+        return new Promise(function(resolve, reject) {
+          func(date,resolve);
+        })
+      })
+    })(list[i])
+  }
+  for (var i = 0; i < funList.length; i++) {
+    if (i == 0) {
+      next = funList[i]()
+    } else {
+      next = next.then(funList[i])
+    }
+  }
+  next.then(()=>{
+    end();
+  })
+}
 
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  orderListPromise
 }

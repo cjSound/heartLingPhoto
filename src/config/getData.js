@@ -2,7 +2,6 @@ import {URL} from './service.js'
 import Fly from 'flyio/dist/npm/wx'
 let fly =''; 
 const host =URL
-console.log(mpvuePlatform)
 if(mpvuePlatform=='wx'){
     fly = new Fly();
 }
@@ -13,7 +12,6 @@ fly.interceptors.request.use((request) => {
     title: "加载中",
     mask:true
   });
-  console.log(request);
   // request.headers["X-Tag"] = "flyio";
   // request.headers['content-type']= 'application/json';
   request.headers = {
@@ -46,7 +44,7 @@ fly.interceptors.request.use((request) => {
 fly.interceptors.response.use(
   (response) => {
     wx.hideLoading();
-    return response.data;//请求成功之后将返回值返回
+    return JSON.parse(response.data);//请求成功之后将返回值返回
   },
   (err) => {
     //请求出错，根据返回状态码判断出错原因

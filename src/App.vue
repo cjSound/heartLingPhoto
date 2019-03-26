@@ -14,19 +14,11 @@ export default {
     // if(mpvuePlatform === 'wx'){
     //   mpvue.getData =new wxFly();
     // }
-    let logs
-    if (mpvuePlatform === 'my') {
-      logs = mpvue.getStorageSync({key: 'logs'}).data || []
-      logs.unshift(Date.now())
-      mpvue.setStorageSync({
-        key: 'logs',
-        data: logs
-      })
-    } else {
-      logs = mpvue.getStorageSync('logs') || []
-      logs.unshift(Date.now());
-      mpvue.setStorageSync('logs', logs)
-    }
+    
+    // mpvue.getStorageSync({key: 'logs'})
+    // mpvue.setStorageSync('logs', logs)
+
+    
   },
   log () {
     console.log(`log at:${Date.now()}`)
@@ -35,21 +27,24 @@ export default {
 </script>
 
 <style>
-@import './style/iconfont.css';
+@import "./style/iconfont.css";
+@import "./style/common.less" ;
+
 .container {
-  height: 100%;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
+  align-items: center;
   box-sizing: border-box;
+  height: 100%;
+  padding: 200rpx 0; */
 }
 /* this rule will be remove */
 * {
-  transition: width 2s;
-  -moz-transition: width 2s;
+          transition: width 2s;
+
   -webkit-transition: width 2s;
-  -o-transition: width 2s;
+     -moz-transition: width 2s;
+       -o-transition: width 2s;
 }
 </style>
