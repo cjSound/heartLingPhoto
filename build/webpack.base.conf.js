@@ -58,6 +58,9 @@ let baseWebpackConfig = {
         test: /\.vue$/,
         loader: 'mpvue-loader',
         options: vueLoaderConfig
+      },{
+        test: /\.less$/,
+        loader: "style-loader!css-loader!less-loader"
       },
       {
         test: /\.js$/,

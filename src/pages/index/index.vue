@@ -33,12 +33,12 @@
     <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
 
 
-    <van-tabbar v-model="active" :active="active" @change="onChange($event)">
-      <van-tabbar-item icon="home-o">主页</van-tabbar-item>
+    <!-- <van-tabbar v-model="active" :active="active" @change="onChange($event)">
+      <van-tabbar-item icon="home-o">推荐</van-tabbar-item>
       <van-tabbar-item icon="photo-o"  >相册</van-tabbar-item>
       <van-tabbar-item icon="friends-o"  >我的</van-tabbar-item>
-    </van-tabbar>
-
+    </van-tabbar> -->
+    <tabbar> </tabbar>
     <div class="all">
         <div class="left">
         </div>
@@ -51,6 +51,7 @@
 
 <script>
 import card from '@/components/card'
+import tabbar from '@/components/tabbar'
 
 export default {
   data () {
@@ -66,7 +67,7 @@ export default {
   },
 
   components: {
-    card
+    card,tabbar
   },
  
   methods: {
@@ -75,11 +76,12 @@ export default {
       this.active= event.mp.detail;
       wx.chooseImage({
       success(res) {
-        const tempFilePaths = res.tempFilePaths
+        const tempFilePaths = res.tempFilePaths;
+        console.log(tempFilePaths)
         wx.uploadFile({
-          url: 'https://example.weixin.qq.com/upload', // 仅为示例，非真实的接口地址
+          url: 'http://localhost:8099/upload/mfile', // 仅为示例，非真实的接口地址
           filePath: tempFilePaths[0],
-          name: 'file',
+          name: 'fileList',
           formData: {
             user: 'test'
           },
