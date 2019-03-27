@@ -1,6 +1,6 @@
 <template>
   <div class="main-page main-photo">
-    <div class="addphoto">
+    <div class="addphoto background">
       <div @click="addphoto">
         <div class="add"><span>+</span></div>
         <div class="info">制作相册</div>
@@ -13,7 +13,8 @@
 <script>
 import ptabbar from '@/components/ptabbar'
 import { orderListPromise } from '@/utils/index'
-import { URL } from '@/config/service.js'
+import { URL,FILE_URL } from '@/config/service.js'
+import store from '@/store'
 
 export default {
   components: {
@@ -49,8 +50,8 @@ export default {
       })
     }
   },
-  created() {
-    console.log(this.logs)
+  onShow(){
+    store.commit('setTabIndex','2');
   }
 }
 </script>
@@ -63,7 +64,6 @@ export default {
     height: 150px;
     align-items: center;
     justify-content: center;
-    background: #f5f8ff;
     text-align: center;
     .add {
       span {
@@ -76,9 +76,6 @@ export default {
         font-size: 80rpx;
         margin-bottom: 10px;
       }
-    }
-    .info {
-      color: #3c2310;
     }
   }
 }

@@ -1,15 +1,20 @@
 {
   "pages": [
-    "pages/photo/main",
+    "pages/pinfo/main",
+
     "pages/index/main",
+
+    "pages/photo/main"
     
-    "pages/counter/main"
   ],
+  "usingComponents": {
+    "van-toast": "/static/vant-weapp/dist/toast/index"
+  },
   "requiredBackgroundModes": ["audio"],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fafafa",
+    "navigationBarBackgroundColor": "#02cfbe",
     "navigationBarTitleText": "心玲相册",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
   }
 }

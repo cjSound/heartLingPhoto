@@ -16,7 +16,7 @@
       </div>
       <div class="tabbar-item"
            :class="{'active':tabIndex=='3'}"
-           @click="goto('myinfo','3')">
+           @click="goto('/pages/pinfo/main','3')">
         <div class="iconfont icon-plum"></div>
         <div class="name">我的</div>
       </div>
@@ -67,7 +67,7 @@ export default {
   border: 0 solid #ebedf0;
 
   .active {
-    color: #1989fa;
+    color: #02cfbe;
   }
   .tabbar-item {
     display: flex;
