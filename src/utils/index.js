@@ -3,7 +3,7 @@ function formatNumber (n) {
   return str[1] ? str : `0${str}`
 }
 
-export function formatTime (date) {
+  function formatTime (date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -24,7 +24,7 @@ export function formatTime (date) {
  * 全部执行完 之后最后执行的函数
  * @param {*} end 
  */
-export function orderListPromise(list,func,end){
+  function orderListPromise(list,func,end){
   var funList =[],next ;
   
   for(var i =0;i<list.length;i++){
@@ -48,8 +48,31 @@ export function orderListPromise(list,func,end){
   })
 }
 
-export default {
+function hasLogin(){
+  var login  =mpvue.getStorageSync('login');
+  var result =false;
+  if(login!=null  && login.nickName !=null){
+    result =true;
+  }
+  if(!result){
+    mpvue.showToast({
+      title: '当前没有用户信息，请先登陆',
+      icon: 'none',
+      duration: 2000
+    })
+    setTimeout(()=>{
+      mpvue.redirectTo({ url:'/pages/pinfo/main' }) 
+    },2000)
+  }
+  return result;
+}
+const animaEvent=[
+  {}
+];
+export   {
   formatNumber,
   formatTime,
-  orderListPromise
+  hasLogin,
+  orderListPromise,
+  animaEvent
 }

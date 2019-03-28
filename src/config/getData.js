@@ -24,7 +24,7 @@ fly.interceptors.request.use((request) => {
   if (logininfo != null && logininfo.openid != null) {
     authParams.oid = logininfo.openid;
     authParams.skey = logininfo.sessionKey;
-    authParams.userId = logininfo.uid;
+    authParams.wuid = logininfo.uid;
   }
   request.body && Object.keys(request.body).forEach((val) => {
     if (request.body[val] === "") {

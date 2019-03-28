@@ -40,9 +40,9 @@ export default {
   },
   methods: {
     goto(url, index) {
-      console.log(this.tabIndex, index)
       if (this.tabIndex != index) {
-        mpvue.navigateTo({ url })
+        console.log('url 跳转',url)
+        mpvue.redirectTo({ url })
       }
       store.commit('setTabIndex', index)
     }

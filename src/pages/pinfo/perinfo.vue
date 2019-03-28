@@ -49,7 +49,6 @@ export default {
 					mpvue.getUserInfo({
 						success(res) {
 							_this.addUser(res.userInfo)
-							console.log(2, res)
 						}
 					})
 				}
@@ -77,13 +76,14 @@ export default {
      */
 		addUser(userinfo) {
 			this.login = true
-			mpvue.setStorageSync('user', userinfo)
 			this.userInfo = userinfo
 			this.$fly.request({
-					method: 'post', //post/get 请求方式
+					method: 'post',  
 					url: 'user/sysnUserInfo',
 					body: userinfo
-				}) 
+				}).then(res=>{
+					mpvue.setStorageSync('login',res.data);
+				});
     },
     initPerinfo(){
       this.$fly.request({

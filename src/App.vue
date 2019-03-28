@@ -15,6 +15,7 @@ export default {
     var _this =this;
 
     //初次进来的 时候  登陆 获取用户唯一openid
+    console.log(this,mpvue);
     mpvue.login({
       success(res) {
         if (res.code) {

@@ -12,7 +12,7 @@
 
 <script>
 import ptabbar from '@/components/ptabbar'
-import { orderListPromise } from '@/utils/index'
+import { orderListPromise ,hasLogin } from '@/utils/index'
 import { URL,FILE_URL } from '@/config/service.js'
 import store from '@/store'
 
@@ -28,24 +28,46 @@ export default {
   },
   methods: {
     addphoto() {
+      var _this =this;
+      var login =hasLogin();
+      if(!login){
+        return ;
+      }
       wx.chooseImage({
         success(res) {
-          const tempFilePaths = res.tempFilePaths;
-          var result =[];
-          orderListPromise(tempFilePaths,function(data,resolve){
-            wx.uploadFile({
-              url: URL + 'upload/mfile',
-              filePath: data,
-              name: 'fileList',
-              success(res) {
-                let msg =JSON.parse(res.data);
-                result.push(msg.data[0]);
-                resolve();
-              }
-            })
-          },function(){
-            console.log(result)
-          })
+          _this.$fly.request({
+              method:"post",  
+              url:"photo/addphoto",
+              body:{}
+            }).then(photodata =>{
+              const tempFilePaths = res.tempFilePaths;
+              var result =[];
+              mpvue.showLoading({
+                title: '上传中'
+              })
+              orderListPromise(tempFilePaths,function(data,resolve){
+                wx.uploadFile({
+                  url: URL + 'upload/mfile',
+                  filePath: data,
+                  name: 'fileList',
+                  formData:{
+                    albumId:photodata.data.albumId,
+                    wuid:photodata.data.userId
+                  },
+                  success(res) {
+                    let msg =JSON.parse(res.data);
+                    result.push(msg.data[0]);
+                    resolve();
+                  }
+                })
+              },function(){
+                store.commit('setPhotoList',result);
+                mpvue.setStorageSync('photoList',result);
+                mpvue.setStorageSync('openPhoto',photodata.data);
+                mpvue.hideLoading();
+                mpvue.navigateTo({url:'/pages/addphoto/main'})
+              })
+          });
         }
       })
     }
