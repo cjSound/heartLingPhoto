@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/addphoto/main",
     "pages/photo/main",
+    "pages/addphoto/main",
 
     "pages/pinfo/main",
     "pages/index/main"

@@ -1,5 +1,6 @@
 <template>
     <div class="addphoto">
+        <img class="full-background" :src="templeate.photourl" alt="">
         <animephoto :list ="photoList"></animephoto>
     </div>
 </template>
@@ -24,7 +25,8 @@ export default {
     data(){
         return {
             openPhoto:{},
-            photoList:[]
+            photoList:[],
+            templeate:{}
         }
     },
     methods:{
@@ -33,17 +35,34 @@ export default {
     onShow(){
         this.openPhoto =mpvue.getStorageSync("openPhoto");
         var list= mpvue.getStorageSync("photoList");
-        list.forEach(element => {
-            element.photoUrl =FILE_URL+element.photoUrl
-        });
-        this.photoList =list;
+        this.templeate  = mpvue.getStorageSync("templeate")[this.openPhoto.templateId];
+        console.log(this.templeate);
+        if(list instanceof Array){
+            list.forEach(element => {
+                element.photoUrl =FILE_URL+element.photoUrl
+            });
+            this.photoList =list;
+        }
+        
         console.log(33,this.photoList)
     }
 }
 </script>
 
 <style lang="less">
+@import "./../../style/animations.css";
 .addphoto{
-
+    position: relative;
+    .full-background{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        width:100vw;
+        height:100vh;
+        opacity: 0.5;
+    }
 }
 </style>

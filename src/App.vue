@@ -1,6 +1,6 @@
 <script>
 
-import {URL} from './config/service'
+import {URL,FILE_URL} from './config/service'
 export default {
   created () {
     /*
@@ -16,6 +16,25 @@ export default {
 
     //初次进来的 时候  登陆 获取用户唯一openid
     console.log(this,mpvue);
+    _this.$fly.request({
+        method:"get", //post/get 请求方式
+        url:"user/getTemple",
+      }).then(res =>{
+        var list =res.data;
+        var data ={};
+        list.forEach(element => {
+            element.photourl =FILE_URL+element.photourl
+            data[element.templateId]=element;
+        });
+        mpvue.setStorageSync('templeate',data);
+    });
+    _this.$fly.request({
+        method:"get", //post/get 请求方式
+        url:"user/getPhotoAnimate",
+      }).then(res =>{
+        mpvue.setStorageSync('animaList',res.data);
+    });
+    
     mpvue.login({
       success(res) {
         if (res.code) {
