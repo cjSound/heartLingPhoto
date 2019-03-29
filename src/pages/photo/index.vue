@@ -6,6 +6,22 @@
         <div class="info">制作相册</div>
       </div>
     </div>
+    <div class="black-line">&nbsp</div>
+    <div class="myphoto">
+      <div class="title">我的相册 <span class="num">({{myphotoList.length}})</span></div>
+      <div class="photo-item" v-for="(item,index) in myphotoList" :key="index">
+        <div class="hl-row">
+          <div class="row-item-9 text-center img" @click="editphoto(item)">
+            <span class="iconfont icon-video"></span>
+            <img :src="item.firstImg" alt="">
+          </div>
+          <div class="row-item-13 column-center">
+            <div class="name">{{item.name}}</div>
+            <div class="num">删除</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <ptabbar></ptabbar>
   </div>
 </template>
@@ -23,10 +39,29 @@ export default {
 
   data() {
     return {
-      logs: []
+      myphotoList: []
     }
   },
   methods: {
+    editphoto(item){
+      mpvue.navigateTo({url:'/pages/addphoto/main?albumId='+item.albumId})
+    },
+    getMyphoto(){
+      this.$fly.request({
+        method: 'get',  
+        url: 'photo/getphotos',
+        body: {}
+      }).then(res=>{
+        var list =res.data;
+        list!=null && list.forEach(element => {
+          element.firstImg =FILE_URL+element.firstImg;
+        });
+        this.myphotoList =list==null?[]:list;
+      });
+    },
+    /**
+     * 上传图片   判断是否登录  promise上传
+     */
     addphoto() {
       var _this =this;
       var login =hasLogin();
@@ -61,11 +96,8 @@ export default {
                   }
                 })
               },function(){
-                store.commit('setPhotoList',result);
-                mpvue.setStorageSync('photoList',result);
-                mpvue.setStorageSync('openPhoto',photodata.data);
                 mpvue.hideLoading();
-                mpvue.navigateTo({url:'/pages/addphoto/main'})
+                mpvue.navigateTo({url:'/pages/addphoto/main?albumId='+photodata.data.albumId})
               })
           });
         }
@@ -74,12 +106,63 @@ export default {
   },
   onShow(){
     store.commit('setTabIndex','2');
+    this.getMyphoto();
   }
 }
 </script>
 
 <style lang='less'>
 .main-photo {
+  .black-line{
+    height: 20rpx;
+    background: #e1e4ed;
+  }
+  .myphoto{
+    background: #fff;
+    padding-top: 20rpx;
+    .photo-item{
+      margin: 20rpx ;
+      padding: 20rpx 0;
+      border: 1px solid #e6e4e4;
+      border-radius: 10rpx;
+      box-shadow: 3rpx 10rpx 20rpx #e6e4e4;
+      .img{
+        position: relative;
+        text-align: center;
+        .iconfont{
+          position: absolute;
+          top: 50%;
+          color: #fff;
+          margin: 0 auto;
+          font-size: 2em;
+          transform: translateY(-50%);
+          left: 36%;
+        }
+      }
+      // box-shadow: 
+      image{
+        width: 92%;
+        height: 200rpx;
+        border-radius: 20rpx;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position:-25px -374px;
+
+      }
+      .column-center{
+        height: 200rpx;
+        padding-left: 30rpx;
+      }
+    }
+    .title{
+      padding-left: 40rpx;
+      font-size: 1em;
+    }
+    .num{
+      color: #4f4f4f;
+      font-size: 0.8em;
+    }
+  }
   .addphoto {
     display: flex;
     flex-direction: column;

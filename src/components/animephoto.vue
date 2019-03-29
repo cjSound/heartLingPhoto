@@ -16,33 +16,49 @@ export default {
     },
     data(){
         return {
-            photoList:[]
+            photoList:[],
+            time:''
+        }
+    },
+    watch:{
+        list:{
+            handler:function(newVal,oldVal){
+            },
+            deep:true
         }
     },
     methods:{
         initLoop(){
             var index=0;
-            setInterval(()=>{
+            function prevNext(){
                 var prev =index-1>=0?index-1:this.photoList.length-1;
                 this.photoList[index].show='pt-page-current';
                 this.photoList[prev].show='';
-                this.photoList[index].inClass='animated leftswing';
+                this.photoList[index].inClass=this.photoList[index].choiceClass;
                 this.photoList[prev].inClass='';
                 index =index+1>=this.photoList.length?0:  ++index;
-            },3000)
+            }
+            prevNext.call(this);
+            this.time =setInterval(prevNext.bind(this),3000)
+        },
+        init(){
+            this.photoList=[];
+            this.list.forEach(element => {
+                this.photoList.push({
+                    photoUrl:element.photoUrl,
+                    show:'',
+                    inClass:'',
+                    choiceClass:element.type
+                })
+            });
+            this.initLoop();
         }
     },
     mounted(){
-        this.list.forEach(element => {
-            this.photoList.push({
-                photoUrl:element.photoUrl,
-                show:'',
-                inClass:'',
-                choiceClass:''
-            })
-        });
-        this.initLoop();
-        console.log(32)
+        this.init();
+    },
+    onHide(){
+        clearInterval(this.time);
     },
     onShow(){
         

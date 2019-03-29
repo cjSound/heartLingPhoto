@@ -66,31 +66,9 @@ function hasLogin(){
   }
   return result;
 }
-const animaEvent=[
-  {inClass:'pt-page-rotatePullRight',name:"往左展开"},
-  {inClass:'pt-page-rotatePullLeft',name:"往右展开"},
-  {inClass:'pt-page-rotatePullBottom',name:"往上展开"},
-  {inClass:'pt-page-rotatePullTop',name:"往下展开"},
-  {inClass:'pt-page-rotateCarouselBottomIn',name:"往上移入放大"},
-  {inClass:'pt-page-rotateCarouselTopIn',name:"往下移入放大"},
-  {inClass:'pt-page-rotateCarouselRightIn',name:"往左移入放大"},
-  {inClass:'pt-page-rotateCarouselLeftIn',name:"往右移入放大"},
-  {inClass:'animated rubberBand',name:"橡皮圈"},
-  {inClass:'animated swing',name:"秋千摆动"},
-  {inClass:'animated leftswing',name:"秋千摆动"},
-  {inClass:'animated heartBeat',name:"心脏跳动"},
-  {inClass:'animated flipInX',name:"X翻转"},
-  {inClass:'animated flipInY',name:"Y翻转"},
-  {inClass:'animated zoomIn',name:"从中间放大"},
-  {inClass:'animated zoomInDown',name:"从上面放大"},
-  {inClass:'animated jackInTheBox',name:"玩偶匣"},
-  {inClass:'animated rollIn',name:"转入"}
-
-];
 export   {
   formatNumber,
   formatTime,
   hasLogin,
-  orderListPromise,
-  animaEvent
+  orderListPromise
 }

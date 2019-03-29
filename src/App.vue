@@ -15,7 +15,7 @@ export default {
     var _this =this;
 
     //初次进来的 时候  登陆 获取用户唯一openid
-    console.log(this,mpvue);
+    console.log('created');
     _this.$fly.request({
         method:"get", //post/get 请求方式
         url:"user/getTemple",
@@ -46,6 +46,7 @@ export default {
                 code:res.code
               }
             }).then(res =>{
+              console.log('setlogin',res.data)
               mpvue.setStorageSync('login',res.data);
           });
         } else {
@@ -65,6 +66,23 @@ export default {
 @import "./style/iconfont.css";
 @import "./style/common.less" ;
 
+.loopx( @count )when( @count > 0 ){
+    .row-item-@{count}  {
+        width: ( 100% * ((@count/24.0))   );
+    }
+    .loopx((@count - 1));
+}
+.loopx(24);
+.hl-row{
+  >view{
+      float: left;
+  }
+}
+.hl-row::after{
+    clear: both;
+    content: ' ';
+    display: block;
+}
 .container {
   /* display: flex;
   flex-direction: column;

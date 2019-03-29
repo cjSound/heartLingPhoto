@@ -1,7 +1,8 @@
 <template>
     <div class="addphoto">
+        <span class="backinfo iconfont icon-25" @click="back">返回</span>
         <img class="full-background" :src="templeate.photourl" alt="">
-        <animephoto :list ="photoList"></animephoto>
+        <animephoto v-if="photoList.length>0" :list ="photoList"></animephoto>
     </div>
 </template>
 
@@ -14,37 +15,55 @@ import animephoto from '@/components/animephoto'
 
 
 export default {
-    computed: {
-        photoList() {
-            return store.state.photo.photoList
-        }
-    },
     components:{
         animephoto
     },
     data(){
         return {
-            openPhoto:{},
             photoList:[],
-            templeate:{}
+            templeate:{},
+            query :{}
         }
     },
     methods:{
-
+        back(){
+            mpvue.navigateBack({delta:1})
+        },
+        init(){
+            this.$fly.request({
+                method: 'get',  
+                url: 'photo/getphotobyid',
+                body: {
+                    blumId:this.query.albumId
+                }
+            }).then(res=>{
+                this.templeate  = mpvue.getStorageSync("templeate")[res.data.templateId];
+            });
+            this.$fly.request({
+                method: 'get',  
+                url: 'photo/photo/bluminfo',
+                body: {
+                    blumId:this.query.albumId
+                }
+            }).then(res=>{
+                var list  =res.data;
+                if(list instanceof Array){
+                    list.forEach(element => {
+                        element.photoUrl =FILE_URL+element.photoUrl
+                    });
+                    this.photoList =list;
+                }
+            });
+        }
     },
     onShow(){
-        this.openPhoto =mpvue.getStorageSync("openPhoto");
-        var list= mpvue.getStorageSync("photoList");
-        this.templeate  = mpvue.getStorageSync("templeate")[this.openPhoto.templateId];
-        console.log(this.templeate);
-        if(list instanceof Array){
-            list.forEach(element => {
-                element.photoUrl =FILE_URL+element.photoUrl
-            });
-            this.photoList =list;
-        }
-        
-        console.log(33,this.photoList)
+        this.query =this.$root.$mp.query;
+        this.init();
+        console.log(33,this.$root.$mp.query);
+    },
+    onHide(){
+        this.photoList =[];
+        this.templeate ={};
     }
 }
 </script>
@@ -53,6 +72,19 @@ export default {
 @import "./../../style/animations.css";
 .addphoto{
     position: relative;
+    .backinfo{
+        color:#ffffff;
+        background:#5b6470;
+        border-radius:20rpx;
+        position:fixed;
+        top:6vh;
+        z-index:2;
+        padding:4rpx 20rpx;
+        font-size:32rpx;
+        opacity:0.5;
+        left:2vw;
+
+    }
     .full-background{
         position: absolute;
         top: 0;

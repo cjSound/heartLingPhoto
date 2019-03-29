@@ -82,16 +82,16 @@ export default {
 					url: 'user/sysnUserInfo',
 					body: userinfo
 				}).then(res=>{
+					console.log('同步用户信息',userinfo,res.data)
 					mpvue.setStorageSync('login',res.data);
 				});
     },
     initPerinfo(){
       this.$fly.request({
-        method: 'get', //post/get 请求方式
-        url: 'user/getphotos',
+        method: 'get',  
+        url: 'photo/getphotos',
         body: {}
       }).then(res=>{
-        
         this.photoList =res.data;
       });
     }
