@@ -1,5 +1,6 @@
 <template>
     <div class="animephoto">
+        <span class="photonum">{{photoIndex}}/{{photoList.length}}</span>
         <img class="listitem" :class="[item.show,item.inClass]"
             :src="item.photoUrl" alt="" v-for="(item,index) in photoList" :key="index">
             {{index}}
@@ -17,12 +18,14 @@ export default {
     data(){
         return {
             photoList:[],
-            time:''
+            time:'',
+            photoIndex:''
         }
     },
     watch:{
         list:{
             handler:function(newVal,oldVal){
+                this.init();
             },
             deep:true
         }
@@ -37,6 +40,7 @@ export default {
                 this.photoList[index].inClass=this.photoList[index].choiceClass;
                 this.photoList[prev].inClass='';
                 index =index+1>=this.photoList.length?0:  ++index;
+                this.photoIndex =index+1;
             }
             prevNext.call(this);
             this.time =setInterval(prevNext.bind(this),3000)
@@ -60,6 +64,9 @@ export default {
     onHide(){
         clearInterval(this.time);
     },
+    onUnload(){
+        clearInterval(this.time);
+    },
     onShow(){
         
     }
@@ -72,6 +79,12 @@ export default {
     width: 100vw;
     height: 100vh;
     position: relative;
+    .photonum{
+        position:absolute;
+        top:3vh;
+        z-index:2;
+        color:#fff; 
+    }
     image{
         width:94vw;
         height:94vh;

@@ -107,7 +107,10 @@ export default {
   onShow(){
     store.commit('setTabIndex','2');
     this.getMyphoto();
-  }
+  },
+  onHide(){
+        console.log('photo hiden')
+    }
 }
 </script>
 

@@ -41,13 +41,14 @@ export default {
   methods: {
     goto(url, index) {
       if (this.tabIndex != index) {
-        console.log('url 跳转',url)
         mpvue.redirectTo({ url })
       }
       store.commit('setTabIndex', index)
     }
   },
-  mounted() {}
+  mounted() {
+    
+  }
 }
 </script>
 

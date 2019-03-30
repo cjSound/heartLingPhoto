@@ -1,5 +1,5 @@
-var DEV_URL='http://192.168.15.226:8099/';
-var DEV_FILE='http://192.168.15.226:8080/photo-service/'
+var DEV_URL='http://192.168.31.251:8099/';
+var DEV_FILE='http://192.168.31.251:8080/photo-service/'
 
 var PRODUCT_URL='https://www.cjsound.top/';
 var PRODUCT_FILE='https://www.cjsound.top/';

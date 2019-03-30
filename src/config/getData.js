@@ -14,7 +14,7 @@ fly.interceptors.request.use((request) => {
   });
   request.url = URL + request.url;
   var logininfo = mpvue.getStorageSync('login');
-  console.log('logininfo',logininfo)
+  console.log('发送ajax请求 ,拦截判断用户信息',logininfo)
   // request.headers['content-type']= 'application/json';
   request.headers = {
     'content-type': 'application/json'

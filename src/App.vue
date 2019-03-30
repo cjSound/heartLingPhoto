@@ -15,7 +15,7 @@ export default {
     var _this =this;
 
     //初次进来的 时候  登陆 获取用户唯一openid
-    console.log('created');
+    console.log('created',mpvue);
     _this.$fly.request({
         method:"get", //post/get 请求方式
         url:"user/getTemple",
