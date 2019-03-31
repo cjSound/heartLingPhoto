@@ -1,6 +1,7 @@
 <template>
     <div class="animephoto">
         <span class="photonum">{{photoIndex}}/{{photoList.length}}</span>
+        <span class="iconfont icon-Music music" @click="stopMusic" :style="{'transform':'rotate('+rotate+'deg)'}"></span>
         <img class="listitem" :class="[item.show,item.inClass]"
             :src="item.photoUrl" alt="" v-for="(item,index) in photoList" :key="index">
             {{index}}
@@ -13,13 +14,19 @@ export default {
     props:{
         list:{
             type:Array
+        },
+        musicUrl:{
+            type:String
         }
     },
     data(){
         return {
             photoList:[],
-            time:'',
-            photoIndex:''
+            photoInterval:'',
+            photoIndex:'',
+            audioContext:'',
+            rotate:10,
+            rotateInterval:''
         }
     },
     watch:{
@@ -28,9 +35,43 @@ export default {
                 this.init();
             },
             deep:true
+        },
+        musicUrl:function(){
+            this.addMusciWork();
         }
     },
     methods:{
+        stopMusic(){
+            if(this.audioContext.paused){
+                this.audioContext.play();
+            }else{
+                this.audioContext.pause();
+                clearInterval(this.rotateInterval);
+            }
+            
+        },
+        initMusic(){
+            this.audioContext  =this.audioContext ==''? mpvue.createInnerAudioContext():this.audioContext;
+            this.audioContext.autoplay = true
+            this.audioContext.loop =true;
+            this.audioContext.src =this.musicUrl;
+            this.audioContext.onPlay(() => {
+                console.log("kaishi 播放")
+                this.rotateInterval =setInterval(()=>{
+                    this.rotate +=10;
+                },100)
+            })
+            this.audioContext.onError((res) => {
+                mpvue.showToast({
+					title: '音乐资源缺失，请重新选择',
+					icon: 'none',
+					duration: 2000
+				})
+            })
+        },
+        addMusciWork(){
+            this.audioContext.src =this.musicUrl;
+        },
         initLoop(){
             var index=0;
             function prevNext(){
@@ -43,7 +84,7 @@ export default {
                 this.photoIndex =index+1;
             }
             prevNext.call(this);
-            this.time =setInterval(prevNext.bind(this),3000)
+            this.photoInterval =setInterval(prevNext.bind(this),3000)
         },
         init(){
             this.photoList=[];
@@ -56,16 +97,24 @@ export default {
                 })
             });
             this.initLoop();
+        },
+        ending(){
+            clearInterval(this.photoInterval);
+            clearInterval(this.rotateInterval);
+            if(this.audioContext!=''){
+                this.audioContext.destroy();
+            }
         }
     },
     mounted(){
         this.init();
+        this.initMusic();
     },
     onHide(){
-        clearInterval(this.time);
+        this.ending();
     },
     onUnload(){
-        clearInterval(this.time);
+        this.ending();
     },
     onShow(){
         
@@ -79,6 +128,18 @@ export default {
     width: 100vw;
     height: 100vh;
     position: relative;
+    .music{
+        position:absolute;
+        right:6vw;
+        top:11vh;
+        z-index:3;
+        background:#425d6a;
+        color:#fff;
+        border-radius:100rpx;
+        padding:10rpx;
+        border:3rpx solid #fff;
+
+    }
     .photonum{
         position:absolute;
         top:3vh;

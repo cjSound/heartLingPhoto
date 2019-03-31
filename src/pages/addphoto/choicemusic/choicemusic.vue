@@ -6,14 +6,17 @@
         <scroll-view class="scroll-view"
             scroll-y
             @scrolltolower="scroolLower" >
-            <div class="music-item" v-for="(item,index) in pageList" :key="index" @click="choiceMusic(item)">
-                <div class="hl-row">
-                    <div class="text-center img" @click="editphoto(item)">
+            <div class="music-item" v-for="(item,index) in pageList" :key="index" >
+                <div class="hl-row" >
+                    <div class="text-center img"  @click="juedgMusic(item,index)">
                         <img :src="item.picUrl" alt="">
                     </div>
-                    <div class="column-center">
-                        <div class="name">{{item.name}}</div>
+                    <div class="row-item-12 column-center"  @click="juedgMusic(item,index)">
+                        <div class="name one-row">{{item.name}}</div>
                         <div class="num">{{item.signerName}}</div>
+                    </div>
+					<div class="column-center f-r" v-if="musicIndex === index">
+						<span class="small-btn" @click="choiceMusic(item,index)">确认</span>
                     </div>
                 </div>
             </div>
@@ -35,19 +38,60 @@ export default {
 					name: ''
 				}
 			},
-			pageList: []
+			pageList: [],
+			musicIndex:'',
+			audioContext:''
 		}
 	},
 	methods: {
+		initMusic(){
+			this.audioContext =this.audioContext==''?mpvue.createInnerAudioContext():this.audioContext;
+            this.audioContext.autoplay = true
+            this.audioContext.onPlay(() => {
+                this.musicIndex =this.audioContext.index;
+            })
+            this.audioContext.onError((res) => {
+				mpvue.showToast({
+					title: '音乐资源缺失，请重新选择',
+					icon: 'none',
+					duration: 2000
+				})
+            })
+		},
+		juedgMusic(item,index){
+			var url ="https://music.163.com/song/media/outer/url?id="+item.id+".mp3";
+			this.audioContext.src = url;
+			this.audioContext.index =index;
+		},
         /**
          * 改变音乐
          */
-        choiceMusic(item){
-            // item.
+        choiceMusic(item,index){
+			// item.
+			this.musicIndex =index;
+			this.$fly.request({
+                method: 'post',  
+                url: 'photo/change/album',
+                body: {
+                    albumId:this.query.albumId,
+                    musicId:item.musicId
+                }
+            }).then(res=>{
+				mpvue.showToast({
+					title: '修改背景音乐成功',
+					icon: 'none',
+					duration: 1000,
+					success(){
+						mpvue.navigateBack({delta:1})
+					}
+				})
+				
+            });
         },
 		onSearch(e) {
             var data = e.mp.detail;
-            this.pager.params.name=data;
+			this.pager.params.name=data;
+			this.pageNum=1;
             this.pageList=[];
             this.search();
         },
@@ -57,17 +101,32 @@ export default {
             this.search();
         },
 		search() {
-			this.$fly
-				.request({
-					method: 'post',
-					url: 'music/pager/search',
-					body: this.pager
-				})
-				.then(res => {
-					console.log(res)
-					this.pageList = this.pageList.concat(res.data)
-					console.log('list', this.pageList)
-				})
+			if(this.pager.total!=null && this.pageList.length>=this.pager.total){
+				return ;
+			}
+			this.$fly.request({
+				method: 'post',
+				url: 'music/pager/search',
+				body: this.pager
+			})
+			.then(res => {
+	          	this.pager.total =res.total;
+				this.pageList = this.pageList.concat(res.data)
+			})
+		},
+		ending(){
+			if(this.audioContext!=''){
+				this.audioContext.destroy();
+			}
+			this.pager ={
+				pageNum: 1,
+				pageSize: 20,
+				params: {
+					name: ''
+				}
+			}
+			this.pageList=[];
+
 		}
 	},
 	onShow() {
@@ -76,14 +135,15 @@ export default {
 		if (this.query == null || this.query.albumId == null) {
 			this.query = { albumId: 24 }
         }
-        this.pageList=[];
-		this.search()
+		this.search();
+		this.initMusic();
     },
     onHide(){
 		console.log('choicemusic hide')
     },
     onUnload(){
-        console.log('choicemusic onUnload')
+		console.log('choicemusic onUnload')
+		this.ending();
     }
 }
 </script>

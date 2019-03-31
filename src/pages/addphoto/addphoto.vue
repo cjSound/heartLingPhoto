@@ -2,7 +2,7 @@
     <div class="addphoto">
         <span class="backinfo iconfont icon-25" @click="back">返回</span>
         <img class="full-background" :src="templeate.photourl" alt="">
-        <animephoto v-if="photoList.length>0" :list ="photoList"></animephoto>
+        <animephoto v-if="photoList.length>0"  :musicUrl="musicUrl" :list ="photoList"></animephoto>
         <van-action-sheet
             :show="tempSelect"
             :actions="actions"
@@ -60,7 +60,8 @@ export default {
             templeate:{},
             query :{},
             tempSelect:false,
-            actions:[]
+            actions:[],
+            audioContext:''
         }
     },
     methods:{
@@ -68,12 +69,11 @@ export default {
             this.tempSelect =false;
         },
         choiceTemp(e){
-            console.log(3232,e.mp.detail)
             var data = e.mp.detail;
             this.templeate =this.templeateList[data.id];
             this.$fly.request({
                 method: 'post',  
-                url: 'photo/album/temp',
+                url: 'photo/change/album',
                 body: {
                     albumId:this.query.albumId,
                     templateId:data.id
@@ -81,7 +81,6 @@ export default {
             }).then(res=>{
                 this.closeSheet();
             });
-            
         },
         addMusic(){
             mpvue.navigateTo({url:'/pages/addphoto/choicemusic/main?albumId='+this.query.albumId})
@@ -126,9 +125,9 @@ export default {
         back(){
             mpvue.navigateBack({delta:1})
         },
+        
         init(){
             this.templeateList = mpvue.getStorageSync("templeate");
-            
             //  sheet  信息
             var actions =[];
             for(var i in this.templeateList){
@@ -142,13 +141,14 @@ export default {
 
             //获取相册的基本信息
             this.$fly.request({
-                method: 'get',  
+                method: 'get',
                 url: 'photo/getphotobyid',
                 body: {
                     blumId:this.query.albumId
                 }
             }).then(res=>{
-                this.photodata =res.data
+                this.photodata =res.data;
+                this.musicUrl ="https://music.163.com/song/media/outer/url?id="+this.photodata.music.id+".mp3";
                 this.templeate =this.templeateList[this.photodata.templateId];
             });
             
@@ -191,6 +191,7 @@ export default {
     onHide(){
         this.photoList =[];
         this.templeate ={};
+        
     },
     onUnload(){
         this.photoList =[];

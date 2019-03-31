@@ -1,9 +1,12 @@
 {
   "pages": [
-    "pages/addphoto/main",
-    "pages/photo/main",
-    "pages/pinfo/main",
     "pages/index/main",
+    "pages/photo/main",
+    "pages/addphoto/main",
+    "pages/asharephoto/main",
+    
+    "pages/pinfo/main",
+    
 
     "pages/addphoto/alumbname/main",
     "pages/addphoto/choicemusic/main",

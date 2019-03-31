@@ -17,7 +17,7 @@
           </div>
           <div class="row-item-13 column-center">
             <div class="name">{{item.name}}</div>
-            <div class="num">删除</div>
+            <div class="num" @click="removePhoto(item)">删除</div>
           </div>
         </div>
       </div>
@@ -43,9 +43,40 @@ export default {
     }
   },
   methods: {
+
+    removePhoto(item){
+      var  _this =this;
+      mpvue.showModal({
+        title: '提示',
+        content: '确定要删除相册吗',
+        success(res) {
+          if (res.confirm) {
+            _this.$fly.request({
+              method: 'get',  
+              url: 'photo/remove',
+              body: {
+                albumId:item.albumId
+              }
+            }).then(res=>{
+              mpvue.showToast({
+                title: '删除成功',
+                icon: 'none',
+                duration: 2000
+              })
+              _this.getMyphoto();
+            });
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+    },
     editphoto(item){
       mpvue.navigateTo({url:'/pages/addphoto/main?albumId='+item.albumId})
     },
+    /**
+     * 初始化 获取相册
+     */
     getMyphoto(){
       this.$fly.request({
         method: 'get',  
@@ -147,10 +178,6 @@ export default {
         width: 92%;
         height: 200rpx;
         border-radius: 20rpx;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position:-25px -374px;
-
       }
       .column-center{
         height: 200rpx;

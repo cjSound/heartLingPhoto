@@ -1,17 +1,27 @@
 <template>
 	<div class="pinfo-warp">
-		<div class="userinfo background"
-		     v-if="login">
-			<div class="userimg">
-				<img :src="userInfo.avatarUrl"
-				     alt="">
+		<div class=" " v-if="login">
+			<div class="userinfo background">
+				<div class="userimg">
+					<img :src="userInfo.avatarUrl" alt="">
+				</div>
+				<div class="usermsg">
+					<div class="name">{{userInfo.nickName}}</div>
+					<div class="name">相册 {{photoList.length}}</div>
+				</div>
 			</div>
-			<div class="usermsg">
-				<div class="name">{{userInfo.nickName}}</div>
-				<div class="name">相册 0</div>
-			</div>
-
+			<div class="clear"></div>
+			<van-cell-group>
+				<van-cell title="我的照片库" 	:value="perinfo.photoNum+'张'"	is-link/>
+				<van-cell title="我看过的"  	:value="perinfo.lookNum+'个'" is-link/>
+				<van-cell title="我赞过的"  	:value="perinfo.likeNum+'次'" is-link/>
+			</van-cell-group>
+			<van-cell-group>
+				<van-cell title="怎么用心玲相册" 	 is-link/>
+				<van-cell title="关于"   is-link/>
+			</van-cell-group>
 		</div>
+		
 		<div class="login background"
 		     v-else>
 			<div class="user text-center"><span class="iconfont icon-users"></span></div>
@@ -37,7 +47,8 @@ export default {
 		return {
 			login: false,
       userInfo: {},
-      photoList:[]
+			photoList:[],
+			perinfo:{}
 		}
 	},
 	created() {
@@ -84,6 +95,7 @@ export default {
 				}).then(res=>{
 					console.log('同步用户信息',userinfo,res.data)
 					mpvue.setStorageSync('login',res.data);
+					this.initPerinfo();
 				});
     },
     initPerinfo(){
@@ -93,12 +105,22 @@ export default {
         body: {}
       }).then(res=>{
         this.photoList =res.data;
-      });
+			});
+			this.$fly.request({
+        method: 'get',  
+        url: 'user/getperinfo',
+        body: {}
+      }).then(res=>{
+				this.perinfo =res.data;
+				console.log(this.perinfo)
+			});
     }
 	},
 	onShow() {
-    store.commit('setTabIndex', '3');
-    this.initPerinfo();
+		store.commit('setTabIndex', '3');
+		if(this.login){
+			this.initPerinfo();
+		}
 	}
 }
 </script>
