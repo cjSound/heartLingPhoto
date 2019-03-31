@@ -3,10 +3,19 @@
         <span class="backinfo iconfont icon-25" @click="back">返回</span>
         <img class="full-background" :src="templeate.photourl" alt="">
         <animephoto v-if="photoList.length>0" :list ="photoList"></animephoto>
+        <van-action-sheet
+            :show="tempSelect"
+            :actions="actions"
+            cancel-text="取消"
+            close-on-click-overlay	
+            @select="choiceTemp($event)"
+            @close="closeSheet"
+            @cancel="closeSheet"
+        />
         <div class="photo-tabbar">
             <div class="full"></div>
             <div class="tabbar-item"
-                @click="goto('/pages/index/main','1')">
+                @click="tempSelect=true">
                 <div class="iconfont icon-grape"></div>
                 <div class="name">换背景</div>
             </div>
@@ -20,10 +29,13 @@
                 <div class="iconfont icon-pic"></div>
                 <div class="name">加照片</div>
             </div>
-            <div class="tabbar-item"
-                @click="goto('/pages/pinfo/main','3')">
+            <div class="tabbar-item" >
                 <div class="iconfont icon-Font-Szie"></div>
                 <div class="name">加文字</div>
+            </div>
+            <div class="tabbar-item" >
+                <div class="iconfont icon-share"></div>
+                <div class="name">分享</div>
             </div>
         </div>
     </div>
@@ -44,13 +56,35 @@ export default {
     data(){
         return {
             photoList:[],
+            templeateList:[],
             templeate:{},
-            query :{}
+            query :{},
+            tempSelect:false,
+            actions:[]
         }
     },
     methods:{
-        addMusic(){
+        closeSheet(){
+            this.tempSelect =false;
+        },
+        choiceTemp(e){
+            console.log(3232,e.mp.detail)
+            var data = e.mp.detail;
+            this.templeate =this.templeateList[data.id];
+            this.$fly.request({
+                method: 'post',  
+                url: 'photo/album/temp',
+                body: {
+                    albumId:this.query.albumId,
+                    templateId:data.id
+                }
+            }).then(res=>{
+                this.closeSheet();
+            });
             
+        },
+        addMusic(){
+            mpvue.navigateTo({url:'/pages/addphoto/choicemusic/main?albumId='+this.query.albumId})
         },
         /**
          * 继续添加照片
@@ -93,6 +127,20 @@ export default {
             mpvue.navigateBack({delta:1})
         },
         init(){
+            this.templeateList = mpvue.getStorageSync("templeate");
+            
+            //  sheet  信息
+            var actions =[];
+            for(var i in this.templeateList){
+                var item =this.templeateList[i];
+                actions.push({
+                    name:item.name,
+                    id:item.templateId
+                });
+            }
+            this.actions=actions;
+
+            //获取相册的基本信息
             this.$fly.request({
                 method: 'get',  
                 url: 'photo/getphotobyid',
@@ -101,8 +149,10 @@ export default {
                 }
             }).then(res=>{
                 this.photodata =res.data
-                this.templeate  = mpvue.getStorageSync("templeate")[this.photodata.templateId];
+                this.templeate =this.templeateList[this.photodata.templateId];
             });
+            
+            //获取相册里面的所以的图片
             this.$fly.request({
                 method: 'get',  
                 url: 'photo/photo/bluminfo',
@@ -130,7 +180,7 @@ export default {
         }
     },
     onShow(){
-        console.log('addphoto show ',this.lock)
+        console.log('addphoto show ' )
         this.query =this.$root.$mp.query;
         if(this.query ==null || this.query.albumId==null){
             this.query ={albumId:24}

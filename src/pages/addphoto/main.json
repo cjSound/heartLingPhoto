@@ -1,4 +1,8 @@
 {
-  "navigationStyle":"custom"
+  "navigationStyle":"custom",
+  "usingComponents": {
+    "van-action-sheet": "/static/vant-weapp/dist/action-sheet/index",
+    "van-popup": "/static/vant-weapp/dist/popup/index"
+  }
   
 }

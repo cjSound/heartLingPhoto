@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "背景音乐",
+  "usingComponents": {
+    "van-search": "/static/vant-weapp/dist/search/index"
+  }
+}
